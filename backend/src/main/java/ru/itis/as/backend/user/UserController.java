@@ -4,14 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.as.backend.authentication.RegisterDto;
 import ru.itis.as.backend.model.User;
-import ru.itis.as.backend.security.UserPrincipal;
 
-import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -27,13 +25,21 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserDto> getCurrentUser() {
-        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        User user = userService.getUserById(principal.getId());
+    public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
+        User user = userService.getCurrentUser(authentication);
         UserDto userDto = modelMapper.map(user, UserDto.class);
 
         return ResponseEntity.ok(userDto);
+    }
+
+    @GetMapping("/user/all")
+    public ResponseEntity<List<FullUserDto>> getAllUsers() {
+        List<User> users = userService.getAll();
+        List<FullUserDto> userDtos = users.stream()
+                .map(x -> modelMapper.map(x, FullUserDto.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(userDtos);
     }
 
     @Autowired
