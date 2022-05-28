@@ -27,7 +27,14 @@ public class Workspace {
     @ManyToMany
     private List<User> users;
 
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Board> boards;
+
     public Integer getUserCount() {
         return users.size();
+    }
+
+    public Integer getBoardCount() {
+        return boards.size();
     }
 }
