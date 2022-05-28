@@ -6,11 +6,12 @@ import {
 } from "./defaultErrors";
 
 
-export async function defaultHttpResHandler(action) {
+// function gets async function with http request, execute it and validate by response status code
+export async function defaultHttpResHandler(doRequest) {
 	let resStatus;
 	let statusCode;
 	try {
-		const {data} = await action();
+		const {data} = await doRequest();
 		return data;
 	} catch (e) {
 		if(!e || !e.response || !e.response.data) {

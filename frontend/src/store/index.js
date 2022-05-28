@@ -3,6 +3,7 @@ import {user} from "./user";
 import {application} from "./application";
 
 
+// creating Vuex store instance
 const store = createStore({
 	state: {},
 	mutations: {},
@@ -12,6 +13,6 @@ const store = createStore({
 	}
 });
 
-store.dispatch('loadUserToken');
+//store.dispatch('loadUserToken');
 
 export default store;
