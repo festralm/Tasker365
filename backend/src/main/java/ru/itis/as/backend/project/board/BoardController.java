@@ -1,20 +1,16 @@
 package ru.itis.as.backend.project.board;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ru.itis.as.backend.exception.UserNotFoundException;
 import ru.itis.as.backend.model.Board;
-import ru.itis.as.backend.model.User;
-import ru.itis.as.backend.model.Workspace;
-import ru.itis.as.backend.security.UserPrincipal;
-import ru.itis.as.backend.user.UserRepository;
+import ru.itis.as.backend.model.Task;
 
-import java.util.ArrayList;
+import javax.annotation.PostConstruct;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/board")
@@ -22,6 +18,12 @@ public class BoardController {
     private BoardService boardService;
 
     private ModelMapper modelMapper;
+
+    @PostConstruct
+    public void init() {
+        TypeMap<Task, BoardTaskDto> boardTaskMapper = modelMapper.createTypeMap(Task.class, BoardTaskDto.class);
+        boardTaskMapper.addMappings(mapper -> mapper.map(src -> src.getStatus().getName(), BoardTaskDto::setStatus));
+    }
 
     @PostMapping
     public ResponseEntity<?> createBoard(@RequestBody BoardCreateDto dto, Authentication authentication) {
