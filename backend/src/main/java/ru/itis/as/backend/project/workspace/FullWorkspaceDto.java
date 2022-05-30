@@ -11,5 +11,5 @@ public class FullWorkspaceDto {
     private UUID id;
     private String name;
     private List<FullUserDto> users;
-    private String boards;
+    private List<WorkspaceBoardDto> boards;
 }
