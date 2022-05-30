@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = request.getHeader(X_AUTH_TOKEN_HEADER);
 
-            if (tokenProvider.validateToken(token)) {
+            if (token != null && tokenProvider.validateToken(token)) {
                 UUID userId = UUID.fromString(tokenProvider.getUserIdFromJWT(token));
 
                 UserDetails userDetails = customUserDetailsService.findById(userId);
