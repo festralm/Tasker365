@@ -2,12 +2,12 @@ package ru.itis.as.backend.project.board;
 
 import lombok.Data;
 
-import java.util.List;
 import java.util.UUID;
 
 @Data
-public class BoardDto {
+public class BoardTaskDto {
     private UUID id;
-    private String name;
-    private List<BoardTaskDto> tasks;
+    private String title;
+    private String description;
+    private String status;
 }
