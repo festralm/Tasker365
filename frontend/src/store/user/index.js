@@ -1,7 +1,6 @@
 import Cookies from 'js-cookie';
 import {
 	login,
-	register,
 } from "./serverInterationMethods";
 
 
@@ -32,11 +31,6 @@ export const user = {
 			let {token} = await login(data);
 			Cookies.set('token', token);
 			commit('setToken', token);
-		},
-		// default new user register method
-		async register({getters}, data) {
-			if(getters.token) return;
-			await register(data);
 		},
 		// default logout method. Clear auth token from Storage (cookies by default)
 		logout({commit}) {

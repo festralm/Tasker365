@@ -1,24 +1,32 @@
-import {getIterationInfo} from "../user/serverInterationMethods";
+import {createWorkspace, getWorkspaces, register} from "./serverInterationMethods";
 
 
 export const application = {
 	state: {
-		iterationInfo: null
+		workspaces: []
 	},
 	mutations: {
-		setIterationInfo(store, data) {
-			store.iterationInfo = data;
-		},
+		setWorkspaces(state, data) {
+			state.workspaces = data;
+		}
 	},
 	actions: {
-		async loadIterationInfo({commit, getters}) {
-			if(!getters.iterationInfo) {
-				const iterationInfo = await getIterationInfo();
-				commit('setIterationInfo', iterationInfo);
-			}
+		// default new user register method
+		async register({getters}, data) {
+			if(getters.token) return;
+			await register(data);
 		},
+
+		async loadWorkspaces({commit, getters}) {
+			const data = await getWorkspaces(getters.userToken);
+			commit('setWorkspaces', data);
+		},
+
+		async createWorkspace({getters}, data) {
+			await createWorkspace(data, getters.userToken);
+		}
 	},
 	getters: {
-		iterationInfo: (state) => state.iterationInfo
+		workspaces: (state) => state.workspaces,
 	}
 };

@@ -9,9 +9,3 @@ export const login = async (data) => {
 	});
 };
 
-// http request for default register process
-export const register = async (data) => {
-	return await defaultHttpResHandler(async () => {
-		return await makePostReq('/register', data);
-	});
-};
