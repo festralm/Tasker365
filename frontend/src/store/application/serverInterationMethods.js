@@ -44,3 +44,9 @@ export const createTask = async (data, token) => {
         return await makePostReq('/task', data, getAuthHeaders(token));
     });
 };
+
+export const getUsers = async (token) => {
+    return await defaultHttpResHandler(async () => {
+        return await makeGetReq('/user/all', getAuthHeaders(token));
+    });
+};

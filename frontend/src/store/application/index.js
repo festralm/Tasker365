@@ -1,7 +1,7 @@
 import {
 	createBoard,
 	createTask,
-	createWorkspace, getBoardData,
+	createWorkspace, getBoardData, getUsers,
 	getWorkspaceData,
 	getWorkspaces,
 	register
@@ -12,7 +12,8 @@ export const application = {
 	state: {
 		workspaces: [],
 		workspaceData: {},
-		boardData: {tasks: []}
+		boardData: {tasks: []},
+		users: []
 	},
 	mutations: {
 		setWorkspaces(state, data) {
@@ -25,6 +26,10 @@ export const application = {
 
 		setBoardData(state, data) {
 			state.boardData = data;
+		},
+
+		setUsers(state, data) {
+			state.users = data;
 		}
 	},
 	actions: {
@@ -61,6 +66,10 @@ export const application = {
 			await createTask(data, getters.userToken);
 		},
 
+		async loadUsers({commit, getters}) {
+			const data = await getUsers(getters.userToken);
+			commit('setUsers', data);
+		},
 	},
 	getters: {
 		workspaces: (state) => state.workspaces,
@@ -69,5 +78,6 @@ export const application = {
 		todoData: (state) => state.boardData.tasks.filter(i => i.status === 'todo'),
 		workData: (state) => state.boardData.tasks.filter(i => i.status === 'work'),
 		doneData: (state) => state.boardData.tasks.filter(i => i.status === 'done'),
+		users: (state) => state.users
 	}
 };

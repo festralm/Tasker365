@@ -1,8 +1,37 @@
 <template>
   <ProfileLayout>
     <template v-slot:content>
-      <a-modal v-model:visible="visibleTask" title="Создать рабочее пространство" @ok="closeTask">
+      <a-modal v-model:visible="visibleTask" title="Создать рабочее пространство" @cancel="closeTask" @ok="closeTask">
         <a-input v-model:value="entityToCreate.name" placeholder="Название" style="margin-bottom: 20px" />
+
+
+        <a-list
+            item-layout="horizontal"
+            :data-source="users"
+            style="margin-bottom: 30px"
+        >
+          <template #renderItem="{ item }">
+            <a-list-item>
+              <template #actions>
+                <a @click="addUser(item.id)">{{this.entityToCreate.users.includes(item.id) ? "юзер добавлен" : "добавить юзера"}}</a>
+              </template>
+              <a-skeleton avatar :title="false" :loading="!!item.loading" active>
+                <a-list-item-meta
+                    :description="item.email"
+                >
+                  <template #title>
+                    <a href="https://www.antdv.com/">{{ item.name }}</a>
+                  </template>
+                  <template #avatar>
+                    <a-avatar :src="item.avatarUrl" />
+                  </template>
+                </a-list-item-meta>
+              </a-skeleton>
+            </a-list-item>
+          </template>
+        </a-list>
+
+
         <a-button @click="createWorkspace" type="primary">Создать</a-button>
       </a-modal>
 
@@ -56,10 +85,15 @@ export default {
   methods: {
     closeTask: function() {
       this.visibleTask = false;
+      this.entityToCreate = {users: []};
     },
 
     openTask: function() {
       this.visibleTask = true;
+    },
+
+    addUser: function(id) {
+      this.entityToCreate.users.push(id);
     },
 
     goToWorkspace: function(id) {
@@ -80,10 +114,15 @@ export default {
   computed: {
     data() {
       return this.$store.getters.workspaces;
+    },
+
+    users() {
+      return this.$store.getters.users;
     }
   },
   async beforeCreate() {
     await this.$store.dispatch('loadWorkspaces');
+    await this.$store.dispatch('loadUsers');
   }
 }
 </script>
