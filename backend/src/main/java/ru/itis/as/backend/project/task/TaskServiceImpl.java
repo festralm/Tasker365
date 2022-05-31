@@ -41,8 +41,12 @@ public class TaskServiceImpl implements TaskService {
         Status status = statusRepository.findByName(dto.getStatus())
                 .orElseThrow(StatusNotFoundException::new);
 
+
+
         Priority priority = priorityRepository.findByName(dto.getPriority())
                 .orElseThrow(PriorityNotFoundException::new);
+
+
 
         Task task = Task.builder()
                 .id(UUID.randomUUID())

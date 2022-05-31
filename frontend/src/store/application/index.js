@@ -1,13 +1,30 @@
-import {createWorkspace, getWorkspaces, register} from "./serverInterationMethods";
+import {
+	createBoard,
+	createTask,
+	createWorkspace, getBoardData,
+	getWorkspaceData,
+	getWorkspaces,
+	register
+} from "./serverInterationMethods";
 
 
 export const application = {
 	state: {
-		workspaces: []
+		workspaces: [],
+		workspaceData: {},
+		boardData: {tasks: []}
 	},
 	mutations: {
 		setWorkspaces(state, data) {
 			state.workspaces = data;
+		},
+
+		setWorkspaceData(state, data) {
+			state.workspaceData = data;
+		},
+
+		setBoardData(state, data) {
+			state.boardData = data;
 		}
 	},
 	actions: {
@@ -24,9 +41,33 @@ export const application = {
 
 		async createWorkspace({getters}, data) {
 			await createWorkspace(data, getters.userToken);
-		}
+		},
+
+		async loadWorkspaceData({commit, getters}, id) {
+			const data = await getWorkspaceData(id, getters.userToken);
+			commit('setWorkspaceData', data);
+		},
+
+		async createBoard({getters}, data) {
+			await createBoard(data, getters.userToken);
+		},
+
+		async loadBoardData({commit, getters}, id) {
+			const data = await getBoardData(id, getters.userToken);
+			commit('setBoardData', data);
+		},
+
+		async createTask({getters}, data) {
+			await createTask(data, getters.userToken);
+		},
+
 	},
 	getters: {
 		workspaces: (state) => state.workspaces,
+		workspaceData: (state) => state.workspaceData,
+		boardData: (state) => state.boardData,
+		todoData: (state) => state.boardData.tasks.filter(i => i.status === 'todo'),
+		workData: (state) => state.boardData.tasks.filter(i => i.status === 'work'),
+		doneData: (state) => state.boardData.tasks.filter(i => i.status === 'done'),
 	}
 };

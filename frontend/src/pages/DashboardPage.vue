@@ -17,7 +17,7 @@
         <a-list :grid="{ gutter: 30, column: 3 }" :data-source="data">
           <template #renderItem="{ item }">
             <a-list-item>
-              <a-card hoverable style="width: 330px">
+              <a-card @click="goToWorkspace(item.id)" hoverable style="width: 330px">
                 <template #cover>
                   <img
                       alt="example"
@@ -50,7 +50,7 @@ export default {
   data() {
     return {
       visibleTask: false,
-      entityToCreate: {}
+      entityToCreate: {users: []}
     }
   },
   methods: {
@@ -62,11 +62,16 @@ export default {
       this.visibleTask = true;
     },
 
+    goToWorkspace: function(id) {
+      this.$router.push('/user/workspace/' + id);
+    },
+
     createWorkspace: async function() {
       try {
         await this.$store.dispatch('createWorkspace', this.entityToCreate);
         successNotification(this, "Пространство создано успешно");
         this.closeTask();
+        this.$store.dispatch('loadWorkspaces');
       } catch (e) {
         errorNotification(this, e.message);
       }

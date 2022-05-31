@@ -1,38 +1,29 @@
-import {
-	AuthFailedError,
-	InternalServerError,
-	InvalidCredentialsError,
-	ValidationError
-} from "./defaultErrors";
+import {InternalServerError, InvalidCredentialsError, TokenInvalidError} from "./defaultErrors";
 
 
 // function gets async function with http request, execute it and validate by response status code
 export async function defaultHttpResHandler(doRequest) {
 	let resStatus;
-	let statusCode;
 	try {
-		const {data} = await doRequest();
-		return data;
+		let response = await doRequest();
+		if (response.status === 200) {
+			return response.data;
+		} else {
+			resStatus = response.status;
+		}
 	} catch (e) {
 		if(!e || !e.response || !e.response.data) {
 			throw new InternalServerError();
 		}
 		resStatus = e.response.status;
-		statusCode = e.response.data.statusCode;
 	}
 	switch (resStatus) {
-		case 400:
-			switch (statusCode) {
-				case 'AuthFailed':
-					throw new AuthFailedError();
-				case 'InvalidCredentialsError':
-					throw new InvalidCredentialsError();
-				case 'ValidationError':
-					throw new ValidationError();
-			}
-			break;
+		case 403:
+			throw new InvalidCredentialsError();
 		case 500:
 			throw new InternalServerError();
+		case 401:
+			throw new TokenInvalidError();
 	}
-	throw new InvalidCredentialsError();
+	throw new InternalServerError();
 }

@@ -28,9 +28,9 @@ export const user = {
 		// default user authorization method. Saves token in cookies if success
 		async login({getters, commit}, data) {
 			if(getters.token) return;
-			let {token} = await login(data);
-			Cookies.set('token', token);
-			commit('setToken', token);
+			let ret = await login(data);
+			Cookies.set('token', ret.token);
+			commit('setToken', ret.token);
 		},
 		// default logout method. Clear auth token from Storage (cookies by default)
 		logout({commit}) {

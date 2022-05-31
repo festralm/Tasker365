@@ -12,7 +12,7 @@
                   class="auth-input"
                   type="text"
                   placeholder="Email"
-                  v-model="email"
+                  v-model:value="email"
               >
               </a-input>
             </a-form-item>
@@ -21,7 +21,7 @@
                   class="auth-input"
                   type="password"
                   placeholder="Пароль"
-                  v-model="password"
+                  v-model:value="password"
               >
                 <a-icon type="lock" style="color: rgba(0,0,0,.25)"/>
               </a-input>

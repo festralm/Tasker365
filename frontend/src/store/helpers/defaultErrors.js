@@ -27,3 +27,10 @@ export class ValidationError extends Error {
         this.message = 'Ошибка валидации';
     }
 }
+
+export class TokenInvalidError extends Error {
+    constructor(...args) {
+        super(...args);
+        this.message = 'Ошибка токена авторизации';
+    }
+}
